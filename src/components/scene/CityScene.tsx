@@ -1,12 +1,6 @@
-import React, {
-  useRef,
-  useEffect,
-  useMemo,
-  useState,
-  useCallback,
-} from 'react';
+import { useRef, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Sky, Stars } from '@react-three/drei';
+import { Sky } from '@react-three/drei';
 import * as THREE from 'three';
 
 import type { CityData, CityBlock } from '../../types/contribution';
@@ -57,7 +51,7 @@ function InnerScene({
   // Build city once
   useEffect(() => {
     // ── City geometry ───────────────────────────────────────────────────────
-    const { road, buildings, streetFurniture, blockMap } = generateCity(cityData);
+    const { road, buildings, streetFurniture } = generateCity(cityData);
     const cityGroup = new THREE.Group();
     cityGroup.add(road);
     cityGroup.add(buildings);

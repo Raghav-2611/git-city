@@ -1,4 +1,3 @@
-import React from 'react';
 import type { MonthGroup } from '../../systems/DateSystem';
 
 interface TimelineBarProps {

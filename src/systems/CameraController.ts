@@ -22,7 +22,7 @@ export class CameraController {
     camera: THREE.Camera,
     carPosition: THREE.Vector3,
     carRotation: number,
-    dt: number
+    _dt: number
   ) {
     // Compute desired camera position (behind and above car)
     const sinR = Math.sin(carRotation);

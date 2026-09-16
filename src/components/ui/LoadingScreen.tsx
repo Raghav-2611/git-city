@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface LoadingScreenProps {
   username: string;
-  onComplete?: () => void;
 }
 
 const LOADING_STEPS = [
@@ -14,7 +13,7 @@ const LOADING_STEPS = [
   'Your city is almost ready...',
 ];
 
-export function LoadingScreen({ username, onComplete }: LoadingScreenProps) {
+export function LoadingScreen({ username }: LoadingScreenProps) {
   const [stepIndex, setStepIndex] = useState(0);
   const [dots, setDots] = useState('');
 

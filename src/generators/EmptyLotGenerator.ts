@@ -37,7 +37,7 @@ export function createEmptyLot(day: ContributionDay, width: number = 12, depth: 
   return group;
 }
 
-function addParkingMarkings(group: THREE.Group, width: number, depth: number, rng: SeededRNG) {
+function addParkingMarkings(group: THREE.Group, width: number, depth: number, _rng: SeededRNG) {
   const lineMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 });
   const lineCount = Math.floor(width / 3);
   for (let i = 0; i < lineCount - 1; i++) {
@@ -101,15 +101,6 @@ function addTree(group: THREE.Group, x: number, z: number, rng: SeededRNG) {
 
 function addConstructionSite(group: THREE.Group, width: number, depth: number, rng: SeededRNG) {
   const barrierMat = new THREE.MeshStandardMaterial({ color: 0xdd8822, roughness: 0.8 });
-  const fenceMat = new THREE.MeshStandardMaterial({ color: 0xeecc33, roughness: 0.9 });
-  
-  // Construction barriers around perimeter
-  const positions = [
-    [-width / 2 + 0.5, 0, 0, width, depth],
-    [width / 2 - 0.5, 0, 0, width, depth],
-    [0, 0, -depth / 2 + 0.5, depth, width],
-    [0, 0, depth / 2 - 0.5, depth, width],
-  ];
 
   for (let i = 0; i < 4; i++) {
     const count = Math.floor(rng.range(1, 3));

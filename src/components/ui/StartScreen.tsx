@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 
 interface StartScreenProps {
   onSubmit: (username: string, year: number, token?: string) => void;

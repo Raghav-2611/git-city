@@ -73,7 +73,7 @@ export function generateCity(cityData: CityData): SceneObjects {
   return { road, buildings, streetFurniture, blockMap };
 }
 
-function addStreetLamp(group: THREE.Group, x: number, z: number, rng: SeededRNG) {
+function addStreetLamp(group: THREE.Group, x: number, z: number, _rng: SeededRNG) {
   const poleMat = new THREE.MeshStandardMaterial({ color: 0x333344, roughness: 0.7, metalness: 0.5 });
   const lightMat = new THREE.MeshStandardMaterial({
     color: 0xfff8e0,

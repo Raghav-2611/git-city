@@ -1,5 +1,3 @@
-import React from 'react';
-import type { CityData } from '../../types/contribution';
 import type { MonthGroup } from '../../systems/DateSystem';
 
 interface HUDProps {

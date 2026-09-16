@@ -81,9 +81,6 @@ export function createBuilding(day: ContributionDay): THREE.Group {
   const spec = getBuildingSpec(day, rng);
   const group = new THREE.Group();
 
-  const hw = spec.width / 2;
-  const hd = spec.depth / 2;
-
   // ── Main building body ─────────────────────────────────────────────────────
   const bodyGeo = new THREE.BoxGeometry(spec.width, spec.height, spec.depth);
   const bodyMat = getMaterial(`facade-${spec.facadeColor.getHexString()}`, {
@@ -142,7 +139,7 @@ function archetype_roughness(a: BuildingArchetype): number {
   return 0.85;
 }
 
-function addWindowInstances(group: THREE.Group, spec: BuildingSpec, rng: SeededRNG) {
+function addWindowInstances(group: THREE.Group, spec: BuildingSpec, _rng: SeededRNG) {
   const windowColor = new THREE.Color(0xfff5cc);
   const windowMat = new THREE.MeshStandardMaterial({
     color: windowColor,
@@ -271,7 +268,7 @@ function addRoof(group: THREE.Group, spec: BuildingSpec, rng: SeededRNG) {
   }
 }
 
-function addStorefront(group: THREE.Group, spec: BuildingSpec, rng: SeededRNG) {
+function addStorefront(group: THREE.Group, spec: BuildingSpec, _rng: SeededRNG) {
   if (spec.archetype === 'industrial') return;
 
   // Entrance canopy

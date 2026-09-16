@@ -77,7 +77,6 @@ function createNPCCarMesh(color: number): THREE.Group {
   const group = new THREE.Group();
 
   const bodyMat = new THREE.MeshStandardMaterial({ color, roughness: 0.4, metalness: 0.3 });
-  const darkMat = new THREE.MeshStandardMaterial({ color: 0x111122, roughness: 0.5 });
   const glassMat = new THREE.MeshStandardMaterial({
     color: 0x88bbdd,
     transparent: true,

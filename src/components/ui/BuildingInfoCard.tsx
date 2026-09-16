@@ -1,4 +1,3 @@
-import React from 'react';
 import type { CityBlock } from '../../types/contribution';
 import { formatDate } from '../../utils/mathUtils';
 
