@@ -11,6 +11,7 @@ interface HighwaySignOptions {
  */
 export function createHighwaySign(options: HighwaySignOptions): THREE.Group {
   const group = new THREE.Group();
+  group.rotation.y = Math.PI; // Face oncoming traffic driving along +Z
   const { zoneYear, sectorNumber, sectorName } = options;
 
   // Metal gantry materials

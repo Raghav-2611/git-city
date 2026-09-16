@@ -21,6 +21,7 @@ export class TrafficLightSystem {
   createSignal(group: THREE.Group, x: number, z: number, initialColor: SignalState = 'red') {
     const signalMesh = new THREE.Group();
     signalMesh.position.set(x, 0, z);
+    signalMesh.rotation.y = Math.PI; // Face oncoming driver driving along +Z
 
     // Pole
     const poleMat = new THREE.MeshStandardMaterial({ color: 0x222233, roughness: 0.7, metalness: 0.6 });

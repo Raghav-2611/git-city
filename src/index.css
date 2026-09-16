@@ -576,24 +576,27 @@ kbd {
 ═══════════════════════════════════════════════════════════════════════════ */
 .info-card {
   position: absolute;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%) translateY(12px);
-  width: 300px;
-  background: rgba(10, 10, 20, 0.88);
+  top: 80px;
+  right: 24px;
+  left: auto;
+  bottom: auto;
+  transform: translateX(30px);
+  width: 280px;
+  background: rgba(10, 10, 20, 0.92);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(245, 200, 66, 0.2);
-  border-radius: var(--radius-lg);
-  padding: 20px 24px;
+  border: 1px solid rgba(245, 200, 66, 0.3);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
   z-index: calc(var(--hud-z) + 1);
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.35s ease, transform 0.35s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
 .info-card--visible {
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(0);
 }
 
 .info-card-header {

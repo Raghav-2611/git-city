@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
 import { CityScene } from './components/scene/CityScene';
-import { StartScreen } from './components/ui/StartScreen';
 import { LoadingScreen } from './components/ui/LoadingScreen';
 import { HUD } from './components/ui/HUD';
 import { TimelineBar } from './components/ui/TimelineBar';
@@ -11,9 +10,11 @@ import { DateSystem } from './systems/DateSystem';
 import type { AppPhase, CityData, CityBlock } from './types/contribution';
 import type { MonthGroup } from './systems/DateSystem';
 
+const TARGET_USERNAME = 'Raghav-2611';
+
 export default function App() {
-  const [phase, setPhase] = useState<AppPhase>('start');
-  const [username, setUsername] = useState('');
+  const [phase, setPhase] = useState<AppPhase>('loading');
+  const [username] = useState(TARGET_USERNAME);
   const [cityData, setCityData] = useState<CityData | null>(null);
   const [dateSystem, setDateSystem] = useState<DateSystem | null>(null);
 
@@ -27,7 +28,13 @@ export default function App() {
   // Month jump
   const [jumpToZ, setJumpToZ] = useState<number | null>(null);
 
-  const { data, state: fetchState, error, fetchData, loadDemo } = useGitHubData();
+  const { data, state: fetchState, error, fetchData } = useGitHubData();
+
+  // Load Raghav-2611's city automatically on mount
+  useEffect(() => {
+    const year = new Date().getFullYear() - 1;
+    fetchData(TARGET_USERNAME, year);
+  }, [fetchData]);
 
   // When data arrives, build city
   useEffect(() => {
@@ -38,33 +45,6 @@ export default function App() {
       setPhase('driving');
     }
   }, [fetchState, data]);
-
-  // Auto-start if username is stored or set in env
-  useEffect(() => {
-    const savedUsername = localStorage.getItem('gitcity_username') || (import.meta.env.VITE_GITHUB_USERNAME as string | undefined);
-    if (savedUsername && phase === 'start') {
-      const year = new Date().getFullYear() - 1; // default to past complete year or current
-      setUsername(savedUsername);
-      setPhase('loading');
-      fetchData(savedUsername, year);
-    }
-  }, []);
-
-  const handleStart = useCallback(
-    async (uname: string, year: number, token?: string) => {
-      localStorage.setItem('gitcity_username', uname);
-      setUsername(uname);
-      setPhase('loading');
-      await fetchData(uname, year, token);
-    },
-    [fetchData]
-  );
-
-  const handleDemo = useCallback(() => {
-    setUsername('demo');
-    setPhase('loading');
-    loadDemo();
-  }, [loadDemo]);
 
   const handleNearBlock = useCallback((block: CityBlock | null) => {
     setNearBlock(block);
@@ -80,30 +60,18 @@ export default function App() {
 
   const handleJumpConsumed = useCallback(() => setJumpToZ(null), []);
 
-  const handleMenu = useCallback(() => {
-    setPhase('start');
-    setCityData(null);
-    setDateSystem(null);
-    setNearBlock(null);
-    setInfoVisible(false);
+  const handleRestart = useCallback(() => {
+    setJumpToZ(0); // Jump back to start of highway
   }, []);
 
-  // ESC key → menu
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.code === 'Escape' && phase === 'driving') handleMenu();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [phase, handleMenu]);
+  const handleRetry = useCallback(() => {
+    setPhase('loading');
+    const year = new Date().getFullYear() - 1;
+    fetchData(TARGET_USERNAME, year);
+  }, [fetchData]);
 
   return (
     <div className="app-root">
-      {/* ── Start screen ──────────────────────────────── */}
-      {phase === 'start' && (
-        <StartScreen onSubmit={handleStart} onDemo={handleDemo} />
-      )}
-
       {/* ── Loading screen ────────────────────────────── */}
       {phase === 'loading' && (
         <LoadingScreen username={username} />
@@ -113,8 +81,8 @@ export default function App() {
       {fetchState === 'error' && error && (
         <div className="error-overlay">
           <p className="error-message">{error}</p>
-          <button className="btn-secondary" onClick={() => setPhase('start')}>
-            TRY AGAIN
+          <button className="btn-secondary" onClick={handleRetry}>
+            RETRY LOADING CITY
           </button>
         </div>
       )}
@@ -140,7 +108,7 @@ export default function App() {
             currentDistrict={currentDistrict}
             currentDate={currentDate}
             speed={speed}
-            onMenu={handleMenu}
+            onMenu={handleRestart}
           />
 
           {dateSystem && (
