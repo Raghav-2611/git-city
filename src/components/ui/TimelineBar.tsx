@@ -15,10 +15,10 @@ export function TimelineBar({ months, currentMonth, onMonthClick }: TimelineBarP
             key={m.month}
             className={`timeline-month ${currentMonth === m.month ? 'timeline-month--active' : ''}`}
             onClick={() => onMonthClick(m)}
-            title={`Jump to ${m.monthName}`}
+            title={`Jump to Sector ${m.month.toString().padStart(2, '0')}: ${m.monthName}`}
           >
             <span className="timeline-month-abbr">
-              {m.monthName.slice(0, 3).toUpperCase()}
+              S{m.month.toString().padStart(2, '0')} · {m.monthName.slice(0, 3).toUpperCase()}
             </span>
             <div className="timeline-month-dot" />
           </button>

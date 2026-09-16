@@ -6,6 +6,7 @@ export interface ContributionDay {
   commits?: number;
   pullRequests?: number;
   issues?: number;
+  repositories?: number;
 }
 
 export interface ContributionData {

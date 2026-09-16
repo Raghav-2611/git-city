@@ -596,12 +596,18 @@ kbd {
   transform: translateX(-50%) translateY(0);
 }
 
+.info-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
 .info-card-date {
   font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.18em;
   color: var(--c-accent);
-  margin-bottom: 10px;
 }
 
 .info-card-contributions {
@@ -625,7 +631,6 @@ kbd {
   color: var(--c-text-muted);
 }
 
-/* Floor bars visualization */
 .floor-bars {
   display: flex;
   align-items: flex-end;
@@ -638,7 +643,6 @@ kbd {
 .floor-bar {
   width: 6px;
   height: 100%;
-  background: linear-gradient(to top, var(--c-accent), rgba(245, 200, 66, 0.4));
   border-radius: 1px;
   animation: floorIn 0.3s ease backwards;
 }
@@ -663,15 +667,59 @@ kbd {
   color: var(--c-text-muted);
 }
 
-.info-card-meta {
-  display: flex;
-  gap: 14px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--c-border);
+.info-card-surge-badge {
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 3px 8px;
+  border: 1px solid;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.info-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--c-border);
+}
+
+.info-metric-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.metric-icon {
+  font-size: 1rem;
+}
+
+.metric-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-val {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--c-text);
+  line-height: 1;
+}
+
+.metric-lbl {
+  font-family: var(--font-mono);
+  font-size: 0.48rem;
+  letter-spacing: 0.1em;
   color: var(--c-text-muted);
+  margin-top: 2px;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════

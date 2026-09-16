@@ -11,6 +11,7 @@ interface HUDProps {
 
 export function HUD({ username, year, currentDistrict, currentDate, speed, onMenu }: HUDProps) {
   const speedKmh = Math.round(Math.abs(speed) * 3.6);
+  const displayName = username.toLowerCase() === 'raghav-2611' ? "RAGHAV'S CITY" : `${username.toUpperCase()}'S CITY`;
 
   return (
     <div className="hud">
@@ -20,8 +21,8 @@ export function HUD({ username, year, currentDistrict, currentDate, speed, onMen
           <span className="hud-logo-git">GIT</span>
           <span className="hud-logo-city">CITY</span>
         </div>
-        <div className="hud-tagline">YOUR GITHUB, AS A CITY</div>
-        <div className="hud-username">@{username} · {year}</div>
+        <div className="hud-tagline">{displayName}</div>
+        <div className="hud-username">ZONE {year} · @{username}</div>
       </div>
 
       {/* Top-right: current date */}
@@ -33,13 +34,13 @@ export function HUD({ username, year, currentDistrict, currentDate, speed, onMen
         )}
       </div>
 
-      {/* Bottom-left: district name */}
+      {/* Bottom-left: sector name */}
       <div className="hud-bottomleft">
         {currentDistrict && (
           <>
-            <div className="hud-district-label">DISTRICT</div>
+            <div className="hud-district-label">CURRENT LOCATION</div>
             <div className="hud-district-name">{currentDistrict.districtName}</div>
-            <div className="hud-district-month">{currentDistrict.monthName.toUpperCase()}</div>
+            <div className="hud-district-month">{currentDistrict.zoneName}</div>
           </>
         )}
       </div>
@@ -65,7 +66,7 @@ export function HUD({ username, year, currentDistrict, currentDate, speed, onMen
           </div>
           <div className="hud-control-row">
             <kbd>ESC</kbd>
-            <span onClick={onMenu} style={{ cursor: 'pointer' }}>MENU</span>
+            <span onClick={onMenu} style={{ cursor: 'pointer' }}>RESTART</span>
           </div>
         </div>
       </div>

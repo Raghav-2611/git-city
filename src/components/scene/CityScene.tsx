@@ -9,6 +9,7 @@ import { DateSystem } from '../../systems/DateSystem';
 import { CarController } from '../../systems/CarController';
 import { CameraController } from '../../systems/CameraController';
 import { TrafficSystem } from '../../systems/TrafficSystem';
+import type { TrafficLightSystem } from '../../systems/TrafficLightSystem';
 import { InteractionSystem } from '../../systems/InteractionSystem';
 import { generateCity } from '../../generators/CityGenerator';
 import { useCarControls } from '../../hooks/useCarControls';
@@ -48,10 +49,13 @@ function InnerScene({
   const lastDistrictRef = useRef<number | null>(null);
   const lastBlockRef = useRef<string | null>(null);
 
+  const trafficLightSystemRef = useRef<TrafficLightSystem | null>(null);
+
   // Build city once
   useEffect(() => {
     // ── City geometry ───────────────────────────────────────────────────────
-    const { road, buildings, streetFurniture } = generateCity(cityData);
+    const { road, buildings, streetFurniture, trafficLightSystem } = generateCity(cityData);
+    trafficLightSystemRef.current = trafficLightSystem;
     const cityGroup = new THREE.Group();
     cityGroup.add(road);
     cityGroup.add(buildings);
@@ -145,6 +149,7 @@ function InnerScene({
     cam.update(camera, car.state.position, car.state.rotation, dt);
 
     traffic?.update(dt);
+    trafficLightSystemRef.current?.update(car.state.position);
     interaction?.update(car.state.position);
 
     // Broadcast speed

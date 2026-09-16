@@ -3,6 +3,9 @@ import type { CityData, CityBlock } from '../types/contribution';
 import { createBuilding } from './BuildingGenerator';
 import { createEmptyLot } from './EmptyLotGenerator';
 import { createRoad } from './RoadGenerator';
+import { createHighwaySign } from './HighwaySignGenerator';
+import { DateSystem } from '../systems/DateSystem';
+import { TrafficLightSystem } from '../systems/TrafficLightSystem';
 import { SeededRNG } from '../utils/SeededRNG';
 
 export const STREET_LAMP_SPACING = 22; // one lamp per block
@@ -12,12 +15,12 @@ interface SceneObjects {
   road: THREE.Group;
   buildings: THREE.Group;
   streetFurniture: THREE.Group;
+  trafficLightSystem: TrafficLightSystem;
   blockMap: Map<string, { group: THREE.Group; block: CityBlock }>;
 }
 
 /**
- * Orchestrates the full city scene: road, buildings, empty lots, and furniture.
- * Returns structured groups for adding to the R3F scene.
+ * Orchestrates the full city scene: road, buildings, empty lots, highway signs, and traffic lights.
  */
 export function generateCity(cityData: CityData): SceneObjects {
   const road = createRoad(cityData.cityLength);
@@ -28,9 +31,10 @@ export function generateCity(cityData: CityData): SceneObjects {
   const streetFurniture = new THREE.Group();
   streetFurniture.name = 'streetFurniture';
 
+  const trafficLightSystem = new TrafficLightSystem();
   const blockMap = new Map<string, { group: THREE.Group; block: CityBlock }>();
 
-  // Generate buildings / empty lots
+  // 1. Generate buildings & empty lots
   for (const block of cityData.blocks) {
     let blockGroup: THREE.Group;
 
@@ -46,7 +50,25 @@ export function generateCity(cityData: CityData): SceneObjects {
     blockMap.set(block.day.date, { group: blockGroup, block });
   }
 
-  // Street furniture placed at block intervals
+  // 2. Add Overhead Highway Sector Signboards
+  const dateSystem = new DateSystem(cityData);
+  const monthGroups = dateSystem.getMonthGroups();
+
+  for (const mg of monthGroups) {
+    const signGroup = createHighwaySign({
+      zoneYear: cityData.year,
+      sectorNumber: mg.month,
+      sectorName: mg.monthName,
+    });
+    signGroup.position.set(0, 0, mg.startZ - 4);
+    streetFurniture.add(signGroup);
+
+    // Place dynamic 3D Traffic Lights at each sector boundary
+    trafficLightSystem.createSignal(streetFurniture, -10.5, mg.startZ - 2, 'red');
+    trafficLightSystem.createSignal(streetFurniture, 10.5, mg.startZ - 2, 'red');
+  }
+
+  // 3. Street lamps & sidewalk trees placed at block intervals
   const totalBlocks = Math.ceil(cityData.totalDays / 2);
   const rng = new SeededRNG('city-furniture');
 
@@ -62,15 +84,9 @@ export function generateCity(cityData: CityData): SceneObjects {
       addSidewalkTree(streetFurniture, -TREE_X_OFFSET, z + 5, rng);
       addSidewalkTree(streetFurniture, TREE_X_OFFSET, z + 5, rng);
     }
-
-    // Traffic light every 4 blocks
-    if (i % 4 === 0 && i > 0) {
-      addTrafficLight(streetFurniture, -10.5, z, rng);
-      addTrafficLight(streetFurniture, 10.5, z, rng);
-    }
   }
 
-  return { road, buildings, streetFurniture, blockMap };
+  return { road, buildings, streetFurniture, trafficLightSystem, blockMap };
 }
 
 function addStreetLamp(group: THREE.Group, x: number, z: number, _rng: SeededRNG) {
@@ -117,35 +133,4 @@ function addSidewalkTree(group: THREE.Group, x: number, z: number, rng: SeededRN
   foliage.position.set(x, h + 1.0, z);
   foliage.castShadow = true;
   group.add(foliage);
-}
-
-function addTrafficLight(group: THREE.Group, x: number, z: number, rng: SeededRNG) {
-  const poleMat = new THREE.MeshStandardMaterial({ color: 0x333344, roughness: 0.8, metalness: 0.3 });
-  const poleGeo = new THREE.CylinderGeometry(0.07, 0.09, 5, 6);
-  const pole = new THREE.Mesh(poleGeo, poleMat);
-  pole.position.set(x, 2.5, z);
-  group.add(pole);
-
-  // Light housing
-  const boxGeo = new THREE.BoxGeometry(0.5, 1.4, 0.4);
-  const boxMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.9 });
-  const box = new THREE.Mesh(boxGeo, boxMat);
-  box.position.set(x, 5.2, z);
-  group.add(box);
-
-  // Lights (red, yellow, green)
-  const lightColors = [0xff3300, 0xffaa00, 0x33cc44];
-  const lightState = rng.int(0, 2);
-  lightColors.forEach((col, i) => {
-    const active = i === lightState;
-    const litMat = new THREE.MeshStandardMaterial({
-      color: col,
-      emissive: active ? col : 0x000000,
-      emissiveIntensity: active ? 1.0 : 0,
-    });
-    const litGeo = new THREE.SphereGeometry(0.12, 6, 6);
-    const lit = new THREE.Mesh(litGeo, litMat);
-    lit.position.set(x, 5.5 - i * 0.45, z + 0.22);
-    group.add(lit);
-  });
 }
