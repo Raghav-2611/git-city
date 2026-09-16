@@ -519,13 +519,61 @@ kbd {
 .timeline-track {
   display: flex;
   align-items: center;
-  gap: 2px;
-  background: rgba(10, 10, 16, 0.6);
-  backdrop-filter: blur(8px);
+  gap: 12px;
+  background: rgba(10, 10, 16, 0.82);
+  backdrop-filter: blur(12px);
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   border: 1px solid var(--c-border);
   border-top: none;
-  padding: 6px 12px 10px;
+  padding: 6px 16px 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.timeline-zone-selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(245, 200, 66, 0.08);
+  border: 1px solid rgba(245, 200, 66, 0.3);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.zone-lbl {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--c-accent);
+}
+
+.zone-select {
+  background: transparent;
+  border: none;
+  color: var(--c-text);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+  letter-spacing: 0.05em;
+}
+
+.zone-select option {
+  background: #101018;
+  color: #ffffff;
+}
+
+.timeline-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--c-border);
+}
+
+.timeline-sectors {
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
 
 .timeline-month {

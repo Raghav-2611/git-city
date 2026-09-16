@@ -15,6 +15,7 @@ const TARGET_USERNAME = 'Raghav-2611';
 export default function App() {
   const [phase, setPhase] = useState<AppPhase>('loading');
   const [username] = useState(TARGET_USERNAME);
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear() - 1);
   const [cityData, setCityData] = useState<CityData | null>(null);
   const [dateSystem, setDateSystem] = useState<DateSystem | null>(null);
 
@@ -30,11 +31,10 @@ export default function App() {
 
   const { data, state: fetchState, error, fetchData } = useGitHubData();
 
-  // Load Raghav-2611's city automatically on mount
+  // Load Raghav-2611's city for the selected year
   useEffect(() => {
-    const year = new Date().getFullYear() - 1;
-    fetchData(TARGET_USERNAME, year);
-  }, [fetchData]);
+    fetchData(TARGET_USERNAME, selectedYear);
+  }, [selectedYear, fetchData]);
 
   // When data arrives, build city
   useEffect(() => {
@@ -45,6 +45,15 @@ export default function App() {
       setPhase('driving');
     }
   }, [fetchState, data]);
+
+  const handleYearChange = useCallback((newYear: number) => {
+    setSelectedYear(newYear);
+    setPhase('loading');
+    setCityData(null);
+    setDateSystem(null);
+    setNearBlock(null);
+    setInfoVisible(false);
+  }, []);
 
   const handleNearBlock = useCallback((block: CityBlock | null) => {
     setNearBlock(block);
@@ -66,9 +75,8 @@ export default function App() {
 
   const handleRetry = useCallback(() => {
     setPhase('loading');
-    const year = new Date().getFullYear() - 1;
-    fetchData(TARGET_USERNAME, year);
-  }, [fetchData]);
+    fetchData(TARGET_USERNAME, selectedYear);
+  }, [fetchData, selectedYear]);
 
   return (
     <div className="app-root">
@@ -82,7 +90,7 @@ export default function App() {
         <div className="error-overlay">
           <p className="error-message">{error}</p>
           <button className="btn-secondary" onClick={handleRetry}>
-            RETRY LOADING CITY
+            RETRY LOADING ZONE {selectedYear}
           </button>
         </div>
       )}
@@ -113,8 +121,10 @@ export default function App() {
 
           {dateSystem && (
             <TimelineBar
+              selectedYear={selectedYear}
               months={dateSystem.getMonthGroups()}
               currentMonth={currentDistrict?.month ?? null}
+              onYearChange={handleYearChange}
               onMonthClick={handleJumpToMonth}
             />
           )}
